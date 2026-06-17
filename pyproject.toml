@@ -6,5 +6,13 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fitparse>=1.2.0",
+    "pandas>=2.0.0",
     "pydantic>=2.13.4",
+    "rich>=15.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.16",
+    "ty>=0.0.44",
 ]

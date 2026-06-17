@@ -1,56 +1,56 @@
-# Projet : Décision de récupération - pipeline RL LLM sur données de course
+# Project: Recovery decision — RL pipeline on LLM from running data
 
-## Contexte
-Je veux apprendre à construire un pipeline RL sur un LLM de bout en bout. Mon cas d'usage : à partir de mes N dernières sessions de course (fichiers .fit), le modèle apprend à recommander la bonne décision pour le lendemain - repos, sortie légère (Z1/Z2), ou séance intense.
+## Context
+I want to learn how to build an end-to-end RL pipeline on an LLM. My use case: from my last N running sessions (.fit files), the model learns to recommend the right decision for the next day — rest, easy run (Z1/Z2), or hard session.
 
-Je suis développeur Python confirmé. Je veux être challengé, pas assisté. Tu ne génères pas de code à ma place sauf si je te le demande explicitement.
+I am an experienced Python developer. I want to be challenged, not hand-held. You do not generate code for me unless I explicitly ask.
 
-## Pourquoi c'est un vrai cas de RL
-- La décision a un outcome mesurable et différé : la performance sur les 3-5 sessions suivantes
-- Le reward est mécanique : allure à FC égale sur les jours suivants, progression vers le chrono cible
-- 4 ans de runs quotidiens = ~1400-1500 sessions = autant de séquences décision/outcome dans les données historiques
-- Un grand modèle générique échoue ici : il ne connaît pas mes patterns personnels de récupération
+## Why this is a real RL problem
+- The decision has a measurable, delayed outcome: performance over the next 3–5 sessions
+- The reward is mechanical: pace at equal HR on the following days, progress toward a target time
+- 4 years of daily runs = ~1400–1500 sessions = as many decision/outcome sequences in the historical data
+- A generic large model fails here: it does not know my personal recovery patterns
 
-## Structure du problème
-Input  : fenêtre glissante de N sessions passées (allure, FC, zones, durée, dénivelé par session)
-Output : décision - repos / sortie légère / séance intense
-Reward : calculé a posteriori sur les données historiques - est-ce que les sessions suivantes montrent une meilleure allure à FC égale sur les 5 jours suivants ?
+## Problem structure
+Input  : sliding window of N past sessions (pace, HR, zones, duration, elevation per session)
+Output : decision — rest / easy run / hard session
+Reward : computed retrospectively from historical data — does the next easy run show better pace at equal HR, within a 4-session window?
 
-## Données disponibles
-- ~1400 fichiers .fit (4 ans de runs quotidiens)
-- FC seconde par seconde, GPS, allure, altitude, cadence
-- FC_MAX personnelle : 187 bpm
-- Zones : Z1<70%, Z2 70-80%, Z3 80-87%, Z4 87-93%, Z5>93%
+## Available data
+- ~777 .fit files
+- Second-by-second HR, GPS, pace, altitude, cadence
+- Personal HR_MAX: 187 bpm
+- Zones: Z1 < 70%, Z2 70–80%, Z3 80–87%, Z4 87–93%, Z5 > 93%
 
-## Stack envisagée
-- Modèle de base : petit LLM open source 1.5B-3B
-- Fine-tuning : LoRA via peft + trl
-- Algo RL : GRPO
-- Quantification : GGUF via llama.cpp
-- Déploiement : CPU (Mac ARM, Raspberry Pi)
+## Planned stack
+- Base model: small open-source LLM 1.5B–3B
+- Fine-tuning: LoRA via peft + trl
+- RL algorithm: GRPO
+- Quantization: GGUF via llama.cpp
+- Deployment: CPU (Mac ARM, Raspberry Pi)
 
-## Les grandes étapes du projet
-1. Parsing des .fit et construction des séquences de sessions
-2. Labellisation historique des décisions et outcomes
-3. Annotation / validation manuelle d'un sous-ensemble
-4. Génération synthétique pour le volume
-5. Préparation du dataset (train / val / test held-out)
-6. SFT avec LoRA - apprendre le format de décision
-7. Définition et implémentation du reward mécanique
-8. Boucle RL avec GRPO
-9. Évaluation (base vs SFT vs RL)
-10. Quantification GGUF + déploiement CPU
+## Pipeline steps
+1. Parse .fit files and build session sequences ✅
+2. Label historical decisions and outcomes ✅
+3. Manual annotation / validation of a subset ✅
+4. ~~Synthetic data generation~~ (skipped — sufficient real data)
+5. Dataset preparation (train / val / test split)
+6. SFT with LoRA — learn the decision format
+7. Define and implement the mechanical reward
+8. RL loop with GRPO
+9. Evaluation (base vs SFT vs RL)
+10. GGUF quantization + CPU deployment
 
-## Ce que j'attends de toi
-- Tu m'expliques le QUOI et le POURQUOI avant le COMMENT
-- Tu me poses des questions pour vérifier ma compréhension
-- Tu valides mes choix ou tu les challenges avec des arguments
-- Quand je produis du code, tu le reviews et tu pointes ce qui pourrait être amélioré
-- Tu me signales quand je m'engage dans une mauvaise direction
-- Tu es honnête si une étape est inutile ou over-engineered
+## What I expect from you
+- Explain the WHAT and the WHY before the HOW
+- Ask questions to check my understanding
+- Validate my choices or challenge them with arguments
+- When I write code, review it and point out what could be improved
+- Flag it when I am heading in the wrong direction
+- Be honest if a step is unnecessary or over-engineered
 
-## Comment on travaille
-On avance une étape à la fois.
-Tu commences par me demander où j'en suis sur l'étape courante.
-Tu ne passes à l'étape suivante que quand l'étape courante est solide.
-Si je bloque, tu m'aides à débloquer sans faire à ma place.
+## How we work
+One step at a time.
+Start by asking where I am on the current step.
+Only move to the next step when the current one is solid.
+If I am stuck, help me unblock without doing it for me.
