@@ -150,7 +150,7 @@ def main() -> None:
     unannotated = [k for k in sample if k not in annotations]
 
     total = len(sample)
-    console.print(f"\n[bold]Annotation CLI[/bold] — {len(annotations)}/{total} annotated\n")
+    console.print(f"\n[bold]Annotation CLI[/bold] - {len(annotations)}/{total} annotated\n")
 
     if not unannotated:
         console.print("[green]All sessions annotated.[/green]")

@@ -10,8 +10,8 @@ RL pipeline on an LLM to recommend the next day's recovery decision (rest / easy
   - `rest`: no session that day (day absent from the CSV)
   - `easy`: `pct_z1 + pct_z2 > 90%`
   - `hard`: everything else
-  - `training`: strength training — merge with `easy` if no valid HR, otherwise apply the same zone rule
-- **Reward**: delayed — `efficiency(next easy run) - mean(efficiency of last 5 easy runs)` where efficiency = `speed / avg_hr`. Window capped at 4 sessions; beyond that, reward is `None`.
+  - `training`: strength training - merge with `easy` if no valid HR, otherwise apply the same zone rule
+- **Reward**: delayed - `efficiency(next easy run) - mean(efficiency of last 5 easy runs)` where efficiency = `speed / avg_hr`. Window capped at 4 sessions; beyond that, reward is `None`.
 
 ## CSV structure (`output.csv`)
 
@@ -41,10 +41,10 @@ One row per `.fit` file (one session).
 
 ## Stack
 
-- `fitparse` — .fit file parsing
-- `pydantic` — typed `Session` model
-- `trl` + `peft` — SFT and RL (GRPO)
-- `llama.cpp` — GGUF quantization
+- `fitparse` - .fit file parsing
+- `pydantic` - typed `Session` model
+- `trl` + `peft` - SFT and RL (GRPO)
+- `llama.cpp` - GGUF quantization
 - CPU deployment (Mac ARM, Raspberry Pi)
 
 ## Conventions

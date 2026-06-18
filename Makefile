@@ -30,6 +30,6 @@ setup-dev:
 parse:
 	uv run python -m pipeline.parse
 
-.PHONY: annotate ## ✍️  Annotation interactive des sessions
+.PHONY: annotate ## ✍️  Interactive session annotation
 annotate:
 	uv run python -m pipeline.annotate
