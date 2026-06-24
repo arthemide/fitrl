@@ -1,1 +1,4 @@
-files
+data/raw
+data/processed
+data/annotations
+__pycache__
