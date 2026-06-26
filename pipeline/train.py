@@ -2,6 +2,10 @@ from datasets import Dataset
 from peft import LoraConfig
 from trl import SFTTrainer, SFTConfig
 
+# debug collab to remove torchao error
+import os
+os.environ["PEFT_DISABLE_TORCHAO"] = "1"
+
 if __name__ == "__main__":
     train_dataset = Dataset.from_json("data/processed/train.jsonl")
     val_dataset = Dataset.from_json("data/processed/val.jsonl")
