@@ -1,22 +1,20 @@
 import csv
 import random
 from collections import defaultdict
-from pathlib import Path
 
 import pandas as pd
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-PROCESSED_DIR = Path("data/processed")
-ANNOTATIONS_DIR = Path("data/annotations")
-OUTPUT_CSV = PROCESSED_DIR / "output.csv"
-SAMPLE_CSV = PROCESSED_DIR / "sample.csv"
-ANNOTATIONS_CSV = ANNOTATIONS_DIR / "annotations.csv"
-
-SAMPLE_RATIO = 0.20
-ZONE_COLS = ["pct_z1", "pct_z2", "pct_z3", "pct_z4", "pct_z5"]
-LABEL_MAP = {"e": "easy", "h": "hard", "r": "rest", "t": "training"}
+from pipeline.config import (
+    ANNOTATIONS_CSV,
+    LABEL_MAP,
+    OUTPUT_CSV,
+    SAMPLE_CSV,
+    SAMPLE_RATIO,
+    ZONE_COLS,
+)
 
 console = Console()
 
@@ -78,6 +76,7 @@ def render_zones(row: pd.Series) -> str:
         lines.append(f"Z{i} [{bar:<50}] {pct:5.1f}%")
     return "\n".join(lines)
 
+
 def format_duration(seconds: float) -> str:
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
@@ -88,12 +87,14 @@ def format_duration(seconds: float) -> str:
         return f"{minutes}m {secs}s"
     else:
         return f"{secs}s"
-    
+
+
 def format_distance(meters: float) -> str:
     if meters >= 1000:
         return f"{meters / 1000:.1f} km"
     else:
         return f"{meters:.0f} m"
+
 
 def speed_in_min_per_km(speed: float) -> str:
     if speed <= 0:
@@ -103,8 +104,10 @@ def speed_in_min_per_km(speed: float) -> str:
     seconds = int(pace % 60)
     return f"{minutes}:{seconds:02d} min/km"
 
+
 def speed_in_km_per_h(speed: float) -> str:
     return f"{speed * 3.6:.1f} km/h"
+
 
 def format_speed(sport: str, speed: float) -> str:
     if sport == "running":
@@ -114,7 +117,10 @@ def format_speed(sport: str, speed: float) -> str:
     else:
         return f"{speed:.1f} m/s"
 
-def render_session(row: pd.Series, prev: pd.DataFrame, position: int, total: int) -> None:
+
+def render_session(
+    row: pd.Series, prev: pd.DataFrame, position: int, total: int
+) -> None:
     console.rule(f"[bold cyan]{position}/{total}[/bold cyan]")
 
     content = (
@@ -129,17 +135,28 @@ def render_session(row: pd.Series, prev: pd.DataFrame, position: int, total: int
 
     if not prev.empty:
         table = Table(show_header=True, header_style="bold", box=None)
-        for col in ["start_time", "sport", "duration", "avg_heart_rate", "label", "reward"]:
+        for col in [
+            "start_time",
+            "sport",
+            "duration",
+            "avg_heart_rate",
+            "label",
+            "reward",
+        ]:
             table.add_column(col)
         for _, p in prev.iterrows():
             table.add_row(
-                str(p["start_time"]), p["sport"], format_duration(p["duration"]),
-                str(p["avg_heart_rate"]), p["label"], str(p["reward"]),
+                str(p["start_time"]),
+                p["sport"],
+                format_duration(p["duration"]),
+                str(p["avg_heart_rate"]),
+                p["label"],
+                str(p["reward"]),
             )
         console.print(table)
 
 
-def main() -> None:
+if __name__ == "__main__":
     df = pd.read_csv(OUTPUT_CSV)
     df["start_time"] = pd.to_datetime(df["start_time"])
     df["_key"] = df.apply(session_key, axis=1)
@@ -150,7 +167,9 @@ def main() -> None:
     unannotated = [k for k in sample if k not in annotations]
 
     total = len(sample)
-    console.print(f"\n[bold]Annotation CLI[/bold] - {len(annotations)}/{total} annotated\n")
+    console.print(
+        f"\n[bold]Annotation CLI[/bold] - {len(annotations)}/{total} annotated\n"
+    )
 
     if not unannotated:
         console.print("[green]All sessions annotated.[/green]")
@@ -170,9 +189,13 @@ def main() -> None:
         render_session(row, prev, len(annotations) + 1, total)
 
         label_calc = row["label"]
-        raw = console.input(
-            f"\n[dim]Enter=confirm '{label_calc}' / e·h·r·t / q to quit[/dim] > "
-        ).strip().lower()
+        raw = (
+            console.input(
+                f"\n[dim]Enter=confirm '{label_calc}' / e·h·r·t / q to quit[/dim] > "
+            )
+            .strip()
+            .lower()
+        )
 
         if raw == "q":
             break
@@ -186,7 +209,3 @@ def main() -> None:
 
     done = len(annotations)
     console.print(f"\n[bold green]{done}/{total} annotated[/bold green]")
-
-
-if __name__ == "__main__":
-    main()

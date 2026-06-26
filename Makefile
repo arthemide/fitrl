@@ -33,3 +33,7 @@ parse:
 .PHONY: annotate ## ✍️  Interactive session annotation
 annotate:
 	uv run python -m pipeline.annotate
+
+.PHONY: split ## 🪓 Split data before training
+split:
+	uv run python -m pipeline.split
