@@ -3,3 +3,4 @@ data/processed
 data/annotations
 __pycache__
 .env
+.DS_Store

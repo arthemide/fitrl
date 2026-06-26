@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     training_args = SFTConfig(
         output_dir="output/Llama-3.2-3B-Instruct-lora",
-        max_seq_length=256,
+        max_length=256,
         num_train_epochs=3,
         per_device_train_batch_size=4,
         learning_rate=2e-4,
