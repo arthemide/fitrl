@@ -6,9 +6,9 @@ from pathlib import Path
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from pipeline.config import OUTPUT_CSV, PROCESSED_DIR
-from pipeline.pydantic import Labels, Zones
-from pipeline.split import Split
+from fitrl.config import OUTPUT_CSV, PROCESSED_DIR
+from fitrl.pydantic import Labels, Zones
+from fitrl.split import Split
 
 WINDOW = 5
 
@@ -100,7 +100,7 @@ def write_jsonl(samples: list[dict[str, str]], path: Path) -> None:
             f.write(json.dumps(sample) + "\n")
 
 
-if __name__ == "__main__":
+def run_dataset() -> None:
     output_df = pd.read_csv(OUTPUT_CSV)
     features_by_date = build_day_features(output_df)
     fill_rest_days(features_by_date)

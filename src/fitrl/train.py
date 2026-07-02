@@ -8,7 +8,7 @@ import trackio
 SPACE_ID = os.getenv("TRACKIO_SPACE_ID")
 
 
-def train(
+def run_train(
     data_dir: str = "data/processed",
     output_dir: str = "output/sft",
 ) -> None:
@@ -52,7 +52,3 @@ def train(
 
     trainer.train()
     trainer.save_model(output_dir)
-
-
-if __name__ == "__main__":
-    train()

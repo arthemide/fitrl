@@ -6,9 +6,9 @@ import fitparse
 
 from pathlib import Path
 
-from pipeline.config import PROCESSED_DIR, RAW_DIR
-from pipeline.intervals import RUN_HR_ZONES
-from pipeline.pydantic import Labels, Session, ZonesDurations
+from fitrl.config import PROCESSED_DIR, RAW_DIR
+from fitrl.intervals import RUN_HR_ZONES
+from fitrl.pydantic import Labels, Session, ZonesDurations
 
 # Z5 is everything above the Z4 bound, so drop the Z5 max.
 z1_threshold, z2_threshold, z3_threshold, z4_threshold = RUN_HR_ZONES[:-1]
@@ -99,7 +99,7 @@ def write_csv(sessions: list[Session], path: Path) -> None:
             writer.writerow(session.model_dump())
 
 
-if __name__ == "__main__":
+def run_parse() -> None:
     files: list[Path] = list(RAW_DIR.glob("*.fit"))
     output_path = PROCESSED_DIR / "output.csv"
     sessions: list[Session] = []

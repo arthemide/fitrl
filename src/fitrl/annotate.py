@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from pipeline.config import (
+from fitrl.config import (
     ANNOTATIONS_CSV,
     LABEL_MAP,
     OUTPUT_CSV,
@@ -15,6 +15,7 @@ from pipeline.config import (
     SAMPLE_RATIO,
     ZONE_COLS,
 )
+
 
 console = Console()
 
@@ -156,7 +157,13 @@ def render_session(
         console.print(table)
 
 
-def annotate_sessions(sample: list[str], annotations: dict[str, str]) -> None:
+def annotate_sessions(
+    df: pd.DataFrame,
+    key_to_row: dict[str, pd.Series],
+    sample: list[str],
+    annotations: dict[str, str],
+    total: int,
+) -> None:
     unannotated = [k for k in sample if k not in annotations]
 
     if not unannotated:
@@ -196,7 +203,7 @@ def annotate_sessions(sample: list[str], annotations: dict[str, str]) -> None:
         console.print(f"  → [green]{new_label}[/green]{marker}\n")
 
 
-if __name__ == "__main__":
+def run_annotate() -> None:
     df = pd.read_csv(OUTPUT_CSV)
     df["start_time"] = pd.to_datetime(df["start_time"])
     df["_key"] = df.apply(session_key, axis=1)
@@ -210,6 +217,6 @@ if __name__ == "__main__":
         f"\n[bold]Annotation CLI[/bold] - {len(annotations)}/{total} annotated\n"
     )
 
-    annotate_sessions(sample, annotations)
+    annotate_sessions(df, key_to_row, sample, annotations, total)
     done = len(annotations)
     console.print(f"\n[bold green]{done}/{total} annotated[/bold green]")

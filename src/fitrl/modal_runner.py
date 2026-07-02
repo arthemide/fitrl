@@ -29,7 +29,7 @@ def run() -> None:
     import sys
 
     sys.path.insert(0, "/root")
-    from train import train
+    from train import run_train
 
-    train(data_dir=PROCESSED_DIR, output_dir=OUTPUT_DIR)
+    run_train(data_dir=PROCESSED_DIR, output_dir=OUTPUT_DIR)
     checkpoints_volume.commit()
