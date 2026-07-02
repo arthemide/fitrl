@@ -156,20 +156,8 @@ def render_session(
         console.print(table)
 
 
-if __name__ == "__main__":
-    df = pd.read_csv(OUTPUT_CSV)
-    df["start_time"] = pd.to_datetime(df["start_time"])
-    df["_key"] = df.apply(session_key, axis=1)
-    key_to_row = {row["_key"]: row for _, row in df.iterrows()}
-
-    sample = load_sample(df)
-    annotations = load_annotations()
+def annotate_sessions(sample: list[str], annotations: dict[str, str]) -> None:
     unannotated = [k for k in sample if k not in annotations]
-
-    total = len(sample)
-    console.print(
-        f"\n[bold]Annotation CLI[/bold] - {len(annotations)}/{total} annotated\n"
-    )
 
     if not unannotated:
         console.print("[green]All sessions annotated.[/green]")
@@ -207,5 +195,21 @@ if __name__ == "__main__":
         marker = " [yellow](corrected)[/yellow]" if new_label != label_calc else ""
         console.print(f"  → [green]{new_label}[/green]{marker}\n")
 
+
+if __name__ == "__main__":
+    df = pd.read_csv(OUTPUT_CSV)
+    df["start_time"] = pd.to_datetime(df["start_time"])
+    df["_key"] = df.apply(session_key, axis=1)
+    key_to_row = {row["_key"]: row for _, row in df.iterrows()}
+
+    sample = load_sample(df)
+    annotations = load_annotations()
+
+    total = len(sample)
+    console.print(
+        f"\n[bold]Annotation CLI[/bold] - {len(annotations)}/{total} annotated\n"
+    )
+
+    annotate_sessions(sample, annotations)
     done = len(annotations)
     console.print(f"\n[bold green]{done}/{total} annotated[/bold green]")

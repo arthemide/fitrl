@@ -8,11 +8,13 @@ dependencies = [
     "datasets>=5.0.0",
     "dotenv>=0.9.9",
     "fitparse>=1.2.0",
+    "modal>=1.5.1",
     "pandas>=2.0.0",
     "peft>=0.19.1",
     "pydantic>=2.13.4",
     "rich>=15.0.0",
     "scikit-learn>=1.9.0",
+    "trackio>=0.29.0",
     "transformers>=5.12.1",
     "trl>=1.7.0",
 ]

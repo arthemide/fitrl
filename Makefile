@@ -37,3 +37,11 @@ annotate:
 .PHONY: split ## 🪓 Split data before training
 split:
 	uv run python -m pipeline.split
+
+.PHONY: dataset ## 📦 Build SFT dataset
+dataset:
+	uv run python -m pipeline.dataset
+
+.PHONY: train ## 🚀 Run SFT training on Modal
+train:
+	modal run pipeline/modal_runner.py::run

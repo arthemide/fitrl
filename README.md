@@ -32,6 +32,23 @@ make parse                  # parse .fit files → data/processed/output.csv
 make annotate               # interactive annotation / validation of a subset
 ```
 
+```bash
+make dataset                # build SFT dataset (JSONL) from output.csv
+make train                  # run SFT fine-tuning on Modal (T4 GPU)
+```
+
+### Modal setup
+
+Training runs on [Modal](https://modal.com/) (serverless GPU). One-time setup:
+
+```bash
+modal setup                 # authenticate
+modal secret create hf-secret HF_TOKEN=hf_xxx
+modal secret create trackio-secret TRACKIO_SPACE_ID=your-username/fitrl-sft
+```
+
+Metrics are streamed to a [Trackio](https://github.com/gradio-app/trackio) dashboard on Hugging Face Spaces.
+
 Each `.fit` file becomes one row in `output.csv` (one session). Decision classes:
 
 - **rest** - no session that day (day absent from the CSV)
