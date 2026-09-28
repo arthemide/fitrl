@@ -4,15 +4,15 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline.config import (
+from fitrl.config import (
     EMBARGO_SESSIONS,
     OUTPUT_CSV,
     PROCESSED_DIR,
     TRAIN_FRAC,
     VAL_FRAC,
 )
-from pipeline.parse import Labels
-from pipeline.pydantic import DailyDecision, SessionDate, Split
+from fitrl.parse import Labels
+from fitrl.pydantic import DailyDecision, SessionDate, Split
 
 
 def load_sessions(csv: Path) -> list[SessionDate]:
@@ -95,7 +95,7 @@ def summarize(decisions: list[DailyDecision]) -> None:
     assert train_max < val_min, "train/val overlap in time"
 
 
-if __name__ == "__main__":
+def run_split() -> None:
     sessions = load_sessions(OUTPUT_CSV)
     decisions = build_daily_decisions(sessions)
     assign_splits(decisions, sessions)
